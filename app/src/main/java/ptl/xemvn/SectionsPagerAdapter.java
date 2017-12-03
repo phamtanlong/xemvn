@@ -14,14 +14,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ptl.xemvn.rss.RssFeedModel;
+
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    public ArrayList<RssFeedModel> listData;
+
+    public SectionsPagerAdapter(FragmentManager fm, ArrayList<RssFeedModel> list) {
         super(fm);
+        listData = list;
         caches = new HashMap<>();
     }
 
@@ -32,8 +37,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         if (position + 5 > nextMaxCount) {
             nextMaxCount += 5;
+            if (nextMaxCount > listData.size())
+                nextMaxCount = listData.size();
         } else if (position + 10 < maxCount) {
             nextMaxCount -= 5;
+            if (nextMaxCount < 0)
+                nextMaxCount = 0;
         }
 
         Log.i("Fuck","------Get Item = " + position);
@@ -44,14 +53,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             f = caches.get(position);
             caches.remove(position);
         } else {
-            f = PlaceholderFragment.newInstance(position + 1);
+            f = PlaceholderFragment.newInstance(position + 1, listData.get(position));
         }
 
         //preload
         for (int i = 2; i < 7; ++i) {
             Integer index = position + i;
             if (!caches.containsKey(index)) {
-                PlaceholderFragment fragment = PlaceholderFragment.newInstance(index + 1);
+                PlaceholderFragment fragment = PlaceholderFragment.newInstance(index + 1, listData.get(index));
                 caches.put(index, fragment);
                 Log.i("Fuck", "@@@@@@ Preload Item " + index);
             }

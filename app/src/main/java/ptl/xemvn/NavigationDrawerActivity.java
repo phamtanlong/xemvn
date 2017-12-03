@@ -18,7 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import ptl.xemvn.rss.FetchFeedTask;
+import ptl.xemvn.rss.RssFeedModel;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +54,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        createTabs();
+        fetchRssFeed();
     }
 
     @Override
@@ -130,22 +134,18 @@ public class NavigationDrawerActivity extends AppCompatActivity
      */
     private ViewPager mViewPager;
 
-    private void createTabs () {
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+    private void fetchRssFeed () {
+        FetchFeedTask f = new FetchFeedTask(this, "http://xem.vn/rss/");
+        f.execute();
+    }
+
+    public void onUpdateData (ArrayList<RssFeedModel> list) {
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), list);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.tabbed_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
     }
 
     //Tabbed View End ----------------

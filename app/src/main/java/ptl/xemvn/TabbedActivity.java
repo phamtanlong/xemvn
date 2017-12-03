@@ -28,6 +28,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import ptl.xemvn.rss.RssFeedModel;
 
 public class TabbedActivity extends AppCompatActivity {
 
@@ -57,7 +60,7 @@ public class TabbedActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), new ArrayList<RssFeedModel>());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);

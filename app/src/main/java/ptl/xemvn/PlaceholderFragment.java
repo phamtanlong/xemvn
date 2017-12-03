@@ -23,6 +23,7 @@ public class PlaceholderFragment extends Fragment {
     private View rootView;
     private TextView textView;
     private ImageView imageView;
+    private View progressView;
 
     public PlaceholderFragment() {
         super();
@@ -46,6 +47,7 @@ public class PlaceholderFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
         textView = rootView.findViewById(R.id.section_title);
         imageView = rootView.findViewById(R.id.section_image);
+        progressView = rootView.findViewById(R.id.section_progress);
 
         updateView(sectionNumber, rssFeedModel);
 
@@ -59,9 +61,10 @@ public class PlaceholderFragment extends Fragment {
         if (textView != null)
             textView.setText(rssFeedModel.title);
 
-        if (imageView != null) {
+        if (imageView != null && progressView != null) {
             imageView = rootView.findViewById(R.id.section_image);
-            DownloadImage downloadImage = new DownloadImage(imageView);
+            DownloadImage downloadImage = new DownloadImage(imageView, progressView);
+            downloadImage.showProgress(true);
 
             String url = rssFeedModel.imageLink;
 

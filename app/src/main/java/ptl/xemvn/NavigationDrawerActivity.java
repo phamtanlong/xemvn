@@ -1,13 +1,16 @@
 package ptl.xemvn;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.TextureView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,12 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import ptl.xemvn.rss.FetchFeedTask;
 import ptl.xemvn.rss.RssFeedModel;
@@ -35,6 +34,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
     public String rssNew = "https://xem.vn/rss/";
     public String rssVote = "https://xem.vn/vote.rss/";
     public String rssHot = "https://xem.vn/hot.rss/";
+
+    private View mProgressView;
+    private View mTabbedContainter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mTabbedContainter = findViewById(R.id.tabbed_container);
+        mProgressView = findViewById(R.id.download_progress);
 
         fetchRssFeed(rssNew);
     }
@@ -132,6 +137,10 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     //Tabbed View ----------------
 
+    private void showProgress(final boolean show) {
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mTabbedContainter.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -149,12 +158,13 @@ public class NavigationDrawerActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     private void fetchRssFeed (String url) {
+        showProgress(true);
         FetchFeedTask f = new FetchFeedTask(this, url);
         f.execute();
     }
 
     public void onUpdateData (ArrayList<RssFeedModel> list) {
-
+        showProgress(false);
         Log.i("Item", "-----First Item: " + list.get(0).title);
         Log.i("Item", "-----: " + list.get(0).imageLink);
 

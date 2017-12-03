@@ -1,9 +1,14 @@
 package ptl.xemvn;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -16,31 +21,16 @@ import java.io.InputStream;
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
 
     public ImageView imageView;
+    public View mProgressView;
 
-    public DownloadImage (ImageView imageView1) {
+    public DownloadImage (ImageView imageView1, View progressView) {
         super();
         this.imageView = imageView1;
+        this.mProgressView = progressView;
     }
-
-//    public ProgressDialog mProgressDialog;
-//
-//    @Override
-//    protected void onPreExecute() {
-//        super.onPreExecute();
-//        // Create a progressdialog
-//        mProgressDialog = new ProgressDialog(TabbedActivity.this);
-//        // Set progressdialog title
-//        mProgressDialog.setTitle("Image Downloader");
-//        // Set progressdialog message
-//        mProgressDialog.setMessage("Loading...");
-//        mProgressDialog.setIndeterminate(false);
-//        // Show progressdialog
-//        mProgressDialog.show();
-//    }
 
     @Override
     protected Bitmap doInBackground(String... URL) {
-
         String imageURL = URL[0];
 
         Bitmap bitmap = null;
@@ -58,8 +48,15 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap result) {
         // Set the bitmap into ImageView
+        showProgress(false);
         imageView.setImageBitmap(result);
-//         //Close progressdialog
-//        mProgressDialog.dismiss();
     }
+
+    public void showProgress(final boolean show) {
+        if (mProgressView != null)
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (imageView != null)
+            imageView.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
+
 }

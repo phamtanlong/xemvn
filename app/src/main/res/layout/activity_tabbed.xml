@@ -8,15 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context="ptl.xemvn.TabbedActivity">
 
-    <ProgressBar
-        android:id="@+id/download_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/tabbed_container"
         android:layout_width="match_parent"
@@ -33,5 +24,15 @@
         android:layout_margin="@dimen/fab_margin"
         android:visibility="invisible"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <ProgressBar
+        android:id="@+id/download_progress1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:layout_anchorGravity="bottom" />
 
 </android.support.design.widget.CoordinatorLayout>

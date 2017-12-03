@@ -18,14 +18,17 @@ public class BottomNavigateActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+//                case R.id.navigation_view:
+//                    mTextMessage.setText(R.string.view);
+//                    return true;
+                case R.id.navigation_comment:
+                    mTextMessage.setText(R.string.comment);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_download:
+                    mTextMessage.setText(R.string.download);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_share:
+                    mTextMessage.setText(R.string.share);
                     return true;
             }
             return false;

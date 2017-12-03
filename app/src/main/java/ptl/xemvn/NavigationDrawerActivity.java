@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -47,7 +49,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         Log.i("Fuck","Oncreate NavigationDrawerActivity ----------- ");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,14 +58,17 @@ public class NavigationDrawerActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         mTabbedContainter = findViewById(R.id.tabbed_container);
         mProgressView = findViewById(R.id.download_progress);
@@ -73,7 +78,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -100,6 +105,18 @@ public class NavigationDrawerActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_refresh) {
+            switch (currentPage) {
+                case R.id.nav_new:
+                    fetchRssFeed(rssNew);
+                    break;
+                case R.id.nav_vote:
+                    fetchRssFeed(rssVote);
+                    break;
+                case R.id.nav_hot:
+                    fetchRssFeed(rssHot);
+                    break;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -130,10 +147,31 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_comment:
+                    Log.i("Fuck", "Nagigate comment");
+                    return true;
+                case R.id.navigation_download:
+                    Log.i("Fuck", "Nagigate download");
+                    return true;
+                case R.id.navigation_share:
+                    Log.i("Fuck", "Nagigate share");
+                    return true;
+            }
+            return false;
+        }
+    };
+
 
     //Tabbed View ----------------
 

@@ -5,33 +5,45 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_new"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Mới" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_vote"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="Bình chọn" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_hot"
+            android:icon="@android:drawable/btn_star_big_on"
+            android:title="Hot" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_old"
+            android:icon="@android:drawable/star_big_off"
+            android:title="Cũ" />
+        <item
+            android:id="@+id/nav_notyet"
+            android:icon="@android:drawable/sym_call_missed"
+            android:title="Chưa xem" />
+        <item
+            android:id="@+id/nav_upload"
+            android:icon="@android:drawable/stat_sys_upload_done"
+            android:title="Đăng ảnh" />
+        <item
+            android:id="@+id/nav_meme"
+            android:icon="?android:attr/actionModeCutDrawable"
+            android:title="Chế Meme" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="User">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_login"
+                android:icon="@android:drawable/ic_menu_myplaces"
+                android:title="Đăng nhập" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Tuỳ chọn" />
         </menu>
     </item>
 

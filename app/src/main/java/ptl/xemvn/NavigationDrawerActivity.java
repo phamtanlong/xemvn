@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -26,6 +29,12 @@ import ptl.xemvn.rss.RssFeedModel;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public int currentPage = R.id.nav_new;
+
+    public String rssNew = "https://xem.vn/rss/";
+    public String rssVote = "https://xem.vn/vote.rss/";
+    public String rssHot = "https://xem.vn/hot.rss/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fetchRssFeed();
+        fetchRssFeed(rssNew);
     }
 
     @Override
@@ -97,12 +106,17 @@ public class NavigationDrawerActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        currentPage = id;
+
         if (id == R.id.nav_new) {
-            // Handle the camera action
+            fetchRssFeed(rssNew);
+            Log.i("Fuck", "Go to New");
         } else if (id == R.id.nav_vote) {
-
+            fetchRssFeed(rssVote);
+            Log.i("Fuck", "Go to Vote");
         } else if (id == R.id.nav_hot) {
-
+            fetchRssFeed(rssHot);
+            Log.i("Fuck", "Go to Hot");
         } else if (id == R.id.nav_old) {
 
         } else if (id == R.id.nav_upload) {
@@ -134,18 +148,32 @@ public class NavigationDrawerActivity extends AppCompatActivity
      */
     private ViewPager mViewPager;
 
-    private void fetchRssFeed () {
-        FetchFeedTask f = new FetchFeedTask(this, "http://xem.vn/rss/");
+    private void fetchRssFeed (String url) {
+        FetchFeedTask f = new FetchFeedTask(this, url);
         f.execute();
     }
 
     public void onUpdateData (ArrayList<RssFeedModel> list) {
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), list);
+        Log.i("Item", "-----First Item: " + list.get(0).title);
+        Log.i("Item", "-----: " + list.get(0).imageLink);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.tabbed_container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if (mSectionsPagerAdapter != null && mViewPager != null) {
+
+            Log.i("Fuck", "On update data");
+
+            mSectionsPagerAdapter.updateData(list);
+            mSectionsPagerAdapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
+
+        } else {
+
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), list);
+
+            mViewPager = findViewById(R.id.tabbed_container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+        }
     }
 
     //Tabbed View End ----------------

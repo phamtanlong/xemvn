@@ -20,6 +20,10 @@ public class PlaceholderFragment extends Fragment {
     public int sectionNumber;
     public RssFeedModel rssFeedModel;
 
+    private View rootView;
+    private TextView textView;
+    private ImageView imageView;
+
     public PlaceholderFragment() {
         super();
     }
@@ -38,19 +42,30 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.section_title);
-        textView.setText(rssFeedModel.title);
+        rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
+        textView = rootView.findViewById(R.id.section_title);
+        imageView = rootView.findViewById(R.id.section_image);
 
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.section_image);
-        DownloadImage downloadImage = new DownloadImage(imageView);
-
-        //
-        String url = rssFeedModel.imageLink;
-
-        downloadImage.execute(url);
+        updateView(sectionNumber, rssFeedModel);
 
         return rootView;
+    }
+
+    public void updateView (int number, RssFeedModel model) {
+        sectionNumber = number;
+        rssFeedModel = model;
+
+        if (textView != null)
+            textView.setText(rssFeedModel.title);
+
+        if (imageView != null) {
+            imageView = rootView.findViewById(R.id.section_image);
+            DownloadImage downloadImage = new DownloadImage(imageView);
+
+            String url = rssFeedModel.imageLink;
+
+            downloadImage.execute(url);
+        }
     }
 }

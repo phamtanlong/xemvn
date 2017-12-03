@@ -116,8 +116,8 @@ public class FetchFeedTask extends AsyncTask<Void, Void, ArrayList<RssFeedModel>
                         item.imageLink = image;
                         items.add(item);
 
-                        Log.i("Title", item.title);
-                        Log.i("Image", image);
+//                        Log.i("Title", item.title);
+//                        Log.i("Image", image);
                     }
 
                     title = null;

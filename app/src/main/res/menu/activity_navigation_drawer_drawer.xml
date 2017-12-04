@@ -27,7 +27,7 @@
             android:title="Chưa xem" />
         <item
             android:id="@+id/nav_upload"
-            android:icon="@android:drawable/stat_sys_upload_done"
+            android:icon="@android:drawable/ic_menu_upload"
             android:title="Đăng ảnh" />
         <item
             android:id="@+id/nav_meme"
@@ -39,7 +39,7 @@
         <menu>
             <item
                 android:id="@+id/nav_login"
-                android:icon="@android:drawable/ic_menu_myplaces"
+                android:icon="@drawable/com_facebook_button_icon_blue"
                 android:title="Đăng nhập" />
             <item
                 android:id="@+id/nav_setting"

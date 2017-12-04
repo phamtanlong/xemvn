@@ -17,6 +17,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,16 +30,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.DeviceShareDialog;
+import com.facebook.share.model.ShareLinkContent;
+import com.google.zxing.common.StringUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import ptl.xemvn.rss.FetchFeedTask;
 import ptl.xemvn.rss.RssFeedModel;
+
+import static com.facebook.AccessToken.getCurrentAccessToken;
 
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,8 +65,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
     public String rssVote = "https://xem.vn/vote.rss/";
     public String rssHot = "https://xem.vn/hot.rss/";
 
+    private NavigationView navigationView;
+    private MenuItem facebookItem;
     private View mProgressView;
     private View mTabbedContainter;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +93,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+        Menu menuNav = navigationView.getMenu();
+        facebookItem = menuNav.findItem(R.id.nav_login);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -86,6 +108,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
         fetchRssFeed(rssNew);
 
         requestPermissions();
+
+        //setup facebook
+        setupFacebook();
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+        //AppEventsLogger.activateApp(this);
     }
 
     @Override
@@ -157,6 +184,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_meme) {
 
+        } else if (id == R.id.nav_login) {
+            loginFacebook();
+        } else if (id == R.id.nav_setting) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -179,6 +211,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
                     return true;
                 case R.id.navigation_share:
                     Log.i("Fuck", "Nagigate share");
+                    shareCurrentImage();
                     return true;
             }
             return false;
@@ -195,9 +228,61 @@ public class NavigationDrawerActivity extends AppCompatActivity
         }
     }
 
+    private void setupFacebook () {
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+            new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // App code
+                    Log.i("Facebook", "Login success");
+                }
+
+                @Override
+                public void onCancel() {
+                    // App code
+                    Log.i("Facebook", "Login cancel");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                    Log.i("Facebook", "Login error");
+                }
+            });
+
+        //update logged in status & ui
+        if (isLogedIn()) {
+            facebookItem.setTitle("Đăng xuất");
+        } else {
+            facebookItem.setTitle("Đăng nhập");
+        }
+    }
+
+    private void loginFacebook () {
+
+        if (isLogedIn()) {
+            Log.i("Facebook", "Logout out out...");
+            LoginManager.getInstance().logOut();
+        } else {
+            Log.i("Facebook", "Login begin...");
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        }
+    }
+
+    private boolean isLogedIn () {
+        AccessToken token = AccessToken.getCurrentAccessToken();
+
+        if (token != null && !token.isExpired() && !TextUtils.isEmpty(token.getToken())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void downloadCurrentImage () {
-        int current = mViewPager.getCurrentItem();
-        RssFeedModel model = mSectionsPagerAdapter.listData.get(current);
+        RssFeedModel model = getCurrentModel();
         DownloadImage downloadImage = new DownloadImage(null, null);
 
         try {
@@ -208,7 +293,22 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
 
+    private void shareCurrentImage () {
+        RssFeedModel model = getCurrentModel();
+
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse(model.link))
+                        .build();
+
+        DeviceShareDialog dialog = new DeviceShareDialog(this);
+        dialog.show(content);
+    }
+
+    private RssFeedModel getCurrentModel () {
+        int current = mViewPager.getCurrentItem();
+        return mSectionsPagerAdapter.listData.get(current);
     }
 
     private void saveImage(Bitmap finalBitmap, String name) {

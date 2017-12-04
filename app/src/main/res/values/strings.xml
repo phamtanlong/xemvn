@@ -5,6 +5,10 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_login">Sign in</string>
 
+    <string name="facebook_app_id">715954278601995</string>
+    <string name="fb_login_protocol_scheme">fb715954278601995</string>
+    <string name="facebook_client_token">21b37596375c9c254bd926c0dcbad75e</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

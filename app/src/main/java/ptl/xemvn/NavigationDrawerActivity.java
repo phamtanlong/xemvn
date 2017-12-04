@@ -1,11 +1,16 @@
 package ptl.xemvn;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -22,8 +27,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import ptl.xemvn.rss.FetchFeedTask;
 import ptl.xemvn.rss.RssFeedModel;
@@ -46,8 +58,6 @@ public class NavigationDrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Log.i("Fuck","Oncreate NavigationDrawerActivity ----------- ");
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +84,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
         mProgressView = findViewById(R.id.download_progress);
 
         fetchRssFeed(rssNew);
+
+        requestPermissions();
     }
 
     @Override
@@ -163,6 +175,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
                     return true;
                 case R.id.navigation_download:
                     Log.i("Fuck", "Nagigate download");
+                    downloadCurrentImage();
                     return true;
                 case R.id.navigation_share:
                     Log.i("Fuck", "Nagigate share");
@@ -172,6 +185,65 @@ public class NavigationDrawerActivity extends AppCompatActivity
         }
     };
 
+    private void requestPermissions () {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.INTERNET
+            },1024);
+        }
+    }
+
+    private void downloadCurrentImage () {
+        int current = mViewPager.getCurrentItem();
+        RssFeedModel model = mSectionsPagerAdapter.listData.get(current);
+        DownloadImage downloadImage = new DownloadImage(null, null);
+
+        try {
+            Bitmap bitmap = downloadImage.execute(model.imageLink).get();
+            saveImage(bitmap, model.title.trim().replace(" ", "-") + "");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveImage(Bitmap finalBitmap, String name) {
+
+        //String root = Environment.getExternalStorageDirectory().toString();
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        File myDir = new File(root + "/XemVN");
+        myDir.mkdirs();
+
+        File file = new File(myDir, name + ".jpg");
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+        MediaScannerConnection.scanFile(this, new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
+                });
+
+        Toast.makeText(this.getBaseContext(), "Save file done!", Toast.LENGTH_LONG);
+    }
 
     //Tabbed View ----------------
 
@@ -203,13 +275,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     public void onUpdateData (ArrayList<RssFeedModel> list) {
         showProgress(false);
-        Log.i("Item", "-----First Item: " + list.get(0).title);
-        Log.i("Item", "-----: " + list.get(0).imageLink);
 
         // Set up the ViewPager with the sections adapter.
         if (mSectionsPagerAdapter != null && mViewPager != null) {
-
-            Log.i("Fuck", "On update data");
 
             mSectionsPagerAdapter.updateData(list);
             mSectionsPagerAdapter.notifyDataSetChanged();

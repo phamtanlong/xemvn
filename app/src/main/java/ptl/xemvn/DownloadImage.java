@@ -49,7 +49,8 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         // Set the bitmap into ImageView
         showProgress(false);
-        imageView.setImageBitmap(result);
+        if (imageView != null)
+            imageView.setImageBitmap(result);
     }
 
     public void showProgress(final boolean show) {

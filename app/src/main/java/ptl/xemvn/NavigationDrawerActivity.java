@@ -242,7 +242,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
                     }
                 });
 
-        Toast.makeText(this.getBaseContext(), "Save file done!", Toast.LENGTH_LONG);
+        Toast.makeText(this.getBaseContext(), "Save file done!", Toast.LENGTH_LONG).show();
     }
 
     //Tabbed View ----------------

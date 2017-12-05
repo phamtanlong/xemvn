@@ -45,4 +45,10 @@
         android:hint="Nguồn của ảnh"
         android:inputType="textPersonName" />
 
+    <Button
+        android:id="@+id/upload_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn ảnh (không quá 3MB)" />
+
 </LinearLayout>

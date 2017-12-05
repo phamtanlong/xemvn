@@ -53,11 +53,12 @@ import java.util.concurrent.ExecutionException;
 
 import ptl.xemvn.rss.FetchFeedTask;
 import ptl.xemvn.rss.RssFeedModel;
+import ptl.xemvn.rss.RssFetchListener;
 
 import static com.facebook.AccessToken.getCurrentAccessToken;
 
 public class NavigationDrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, RssFetchListener {
 
     public int currentPage = R.id.nav_new;
 
@@ -374,7 +375,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
         f.execute();
     }
 
-    public void onUpdateData (ArrayList<RssFeedModel> list) {
+    @Override
+    public void onComplete(ArrayList<RssFeedModel> list) {
         showProgress(false);
 
         // Set up the ViewPager with the sections adapter.

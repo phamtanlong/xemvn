@@ -21,10 +21,10 @@ import ptl.xemvn.NavigationDrawerActivity;
 
 public class FetchFeedTask extends AsyncTask<Void, Void, ArrayList<RssFeedModel>> {
 
-    protected NavigationDrawerActivity parentActivity;
+    protected RssFetchListener parentActivity;
     protected String urlLink;
 
-    public FetchFeedTask (NavigationDrawerActivity activity, String url) {
+    public FetchFeedTask (RssFetchListener activity, String url) {
         super();
         parentActivity = activity;
         urlLink = url;
@@ -53,7 +53,7 @@ public class FetchFeedTask extends AsyncTask<Void, Void, ArrayList<RssFeedModel>
     @Override
     protected void onPostExecute(ArrayList<RssFeedModel> list) {
         super.onPostExecute(list);
-        parentActivity.onUpdateData(list);
+        parentActivity.onComplete(list);
     }
 
     protected ArrayList<RssFeedModel> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
@@ -77,11 +77,14 @@ public class FetchFeedTask extends AsyncTask<Void, Void, ArrayList<RssFeedModel>
                     continue;
 
                 if (eventType == XmlPullParser.START_TAG) {
-                    if (name.equalsIgnoreCase("item")) {
+                    if (name.equalsIgnoreCase("item") || name.equalsIgnoreCase("items")) {
                         isItem = true;
                         continue;
                     }
                 }
+
+                if (!isItem)
+                    continue;
 
                 if (eventType == XmlPullParser.END_TAG) {
                     if (name.equalsIgnoreCase("item")) {
@@ -116,8 +119,8 @@ public class FetchFeedTask extends AsyncTask<Void, Void, ArrayList<RssFeedModel>
                         item.imageLink = image;
                         items.add(item);
 
-//                        Log.i("Title", item.title);
-//                        Log.i("Image", image);
+                        //Log.i("Title", item.title);
+                        //Log.i("Image", image);
                     }
 
                     title = null;

@@ -181,7 +181,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_old) {
 
         } else if (id == R.id.nav_upload) {
-
+            Intent intent = new Intent(getApplicationContext(), UploadImageActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_meme) {
 
         } else if (id == R.id.nav_login) {

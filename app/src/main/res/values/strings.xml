@@ -199,4 +199,7 @@
     <string name="view">View</string>
     <string name="download">Download</string>
     <string name="share">Share</string>
+    <string name="title_activity_upload_image">Đăng ảnh</string>
+    <string name="upload_maxnumber_in_day">Bạn được đăng <b>{0}</b> ảnh/ngày</string>
+    <string name="upload_nownumber_in_day">Số ảnh bạn đã đăng hôm nay: <b>{0}</b></string>
 </resources>

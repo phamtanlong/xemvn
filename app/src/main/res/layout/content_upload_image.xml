@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="ptl.xemvn.UploadImageActivity"
+    tools:showIn="@layout/activity_upload_image">
+
+    <TextView
+        android:id="@+id/upload_max_in_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_maxnumber_in_day"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/upload_number_in_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_nownumber_in_day"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/upload_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Tiêu đề của ảnh"
+        android:inputType="textPersonName" />
+
+    <CheckBox
+        android:id="@+id/upload_isyourimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ảnh tự làm" />
+
+    <EditText
+        android:id="@+id/upload_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Nguồn của ảnh"
+        android:inputType="textPersonName" />
+
+</LinearLayout>

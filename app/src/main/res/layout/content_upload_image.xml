@@ -9,46 +9,75 @@
     tools:context="ptl.xemvn.UploadImageActivity"
     tools:showIn="@layout/activity_upload_image">
 
-    <TextView
-        android:id="@+id/upload_max_in_day"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/upload_maxnumber_in_day"
-        android:textAlignment="center" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/upload_number_in_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/upload_nownumber_in_day"
-        android:textAlignment="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/upload_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Tiêu đề của ảnh"
-        android:inputType="textPersonName" />
+            <TextView
+                android:id="@+id/upload_max_in_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_maxnumber_in_day"
+                android:textAlignment="center" />
 
-    <CheckBox
-        android:id="@+id/upload_isyourimage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ảnh tự làm" />
+            <TextView
+                android:id="@+id/upload_number_in_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_number_in_day"
+                android:textAlignment="center" />
 
-    <EditText
-        android:id="@+id/upload_source"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nguồn của ảnh"
-        android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/upload_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Tiêu đề của ảnh"
+                android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/upload_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chọn ảnh (không quá 3MB)" />
+            <CheckBox
+                android:id="@+id/upload_isyourimage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ảnh tự làm" />
+
+            <EditText
+                android:id="@+id/upload_source"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Nguồn của ảnh"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/upload_button_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chọn ảnh (không quá 3MB)" />
+
+            <ImageView
+                android:id="@+id/upload_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@drawable/side_nav_bar"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/com_facebook_profilepictureview_preset_size_normal"
+                android:paddingRight="@dimen/com_facebook_profilepictureview_preset_size_normal"
+                android:paddingTop="@dimen/activity_vertical_margin" />
+
+            <Button
+                android:id="@+id/upload_button_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

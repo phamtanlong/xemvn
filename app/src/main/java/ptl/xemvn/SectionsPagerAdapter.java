@@ -12,7 +12,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ptl.xemvn.rss.RssFeedModel;
@@ -23,28 +22,22 @@ import ptl.xemvn.rss.RssFeedModel;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public ArrayList<RssFeedModel> listData;
-    public HashMap<Integer, PlaceholderFragment> caches;
-//    public int maxCount = 5;
-//    public int nextMaxCount = 5;
+    public ArrayList<RssFeedModel> listData = new ArrayList<>();
+    public HashMap<Integer, PlaceholderFragment> listFragment = new HashMap<>();
 
     public SectionsPagerAdapter(FragmentManager fm, ArrayList<RssFeedModel> list) {
         super(fm);
         listData = list;
-        caches = new HashMap<>();
+        listFragment = new HashMap<>();
     }
 
     public void updateData (ArrayList<RssFeedModel> list) {
         listData = list;
 
-//        maxCount = list.size();
-//        nextMaxCount = list.size();
-
-        for(Map.Entry<Integer, PlaceholderFragment> entry : caches.entrySet()) {
+        for(Map.Entry<Integer, PlaceholderFragment> entry : listFragment.entrySet()) {
             Integer number = entry.getKey();
             PlaceholderFragment fragment = entry.getValue();
             if (fragment != null) {
-                Log.i("fuck", "update view: " + number);
                 fragment.updateView(number, listData.get(number));
             }
         }
@@ -55,56 +48,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
-//        if (position + 5 > nextMaxCount) {
-//            nextMaxCount += 5;
-//            if (nextMaxCount > listData.size())
-//                nextMaxCount = listData.size();
-//        } else if (position + 10 < maxCount) {
-//            nextMaxCount -= 5;
-//            if (nextMaxCount < 0)
-//                nextMaxCount = 0;
-//        }
-
-        Log.i("Fuck","------Get Item = " + position);
-
-        //get in preload
-        PlaceholderFragment f;
-//        if (caches.containsKey(position)) {
-//            f = caches.get(position);
-//            //caches.remove(position);
-//        } else {
-            f = PlaceholderFragment.newInstance(position + 1, listData.get(position));
-            caches.put(position, f);
-//        }
-//
-//        //preload
-//        for (int i = 2; i < 7; ++i) {
-//            Integer index = position + i;
-//            if (!caches.containsKey(index)) {
-//                PlaceholderFragment fragment = PlaceholderFragment.newInstance(index + 1, listData.get(index));
-//                caches.put(index, fragment);
-////                Log.i("Fuck", "@@@@@@ Preload Item " + index);
-//            }
-//        }
-
+        PlaceholderFragment f = PlaceholderFragment.newInstance(position + 1, listData.get(position));
+        listFragment.put(position, f);
         return f;
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-//        if (nextMaxCount != maxCount) {
-//            maxCount = nextMaxCount;
-//            notifyDataSetChanged();
-//        }
-//        Log.i("Fuck","Get Count = " + maxCount);
-//        return maxCount;
-        return 50;
+        return listData.size();
     }
-
-//    @Override
-//    public int getItemPosition(Object object) {
-//        return POSITION_NONE;
-//    }
 }
 

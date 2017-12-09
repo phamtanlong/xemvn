@@ -21,7 +21,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_item_list">Items</string>
+    <string name="title_meme_list">Chọn meme</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
 
@@ -201,5 +201,8 @@
     <string name="share">Share</string>
     <string name="title_activity_upload_image">Đăng ảnh</string>
     <string name="upload_maxnumber_in_day">Bạn được đăng <b>{0}</b> ảnh/ngày</string>
-    <string name="upload_nownumber_in_day">Số ảnh bạn đã đăng hôm nay: <b>{0}</b></string>
+    <string name="upload_number_in_day">Số ảnh bạn đã đăng hôm nay: <b>{0}</b></string>
+
+    <string name="title_meme_edit">Chế meme</string>
+    <string name="done">Xong</string>
 </resources>

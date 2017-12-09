@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -108,6 +109,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
         fetchRssFeed(rssNew);
 
+        ignoreFileUriExposedException();
+
         requestPermissions();
 
         //setup facebook
@@ -185,7 +188,8 @@ public class NavigationDrawerActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), UploadImageActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_meme) {
-
+            Intent intent = new Intent(getApplicationContext(), MemeListActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_login) {
             loginFacebook();
         } else if (id == R.id.nav_setting) {
@@ -219,6 +223,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
             return false;
         }
     };
+
+    private void ignoreFileUriExposedException () {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+    }
 
     private void requestPermissions () {
 
@@ -285,6 +294,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     private void downloadCurrentImage () {
         RssFeedModel model = getCurrentModel();
+        if (model == null) {
+            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         DownloadImage downloadImage = new DownloadImage(null, null);
 
         try {
@@ -299,6 +313,10 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     private void shareCurrentImage () {
         RssFeedModel model = getCurrentModel();
+        if (model == null) {
+            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse(model.link))
@@ -310,7 +328,11 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     private RssFeedModel getCurrentModel () {
         int current = mViewPager.getCurrentItem();
-        return mSectionsPagerAdapter.listData.get(current);
+        if (mSectionsPagerAdapter.listData.size() > current) {
+            return mSectionsPagerAdapter.listData.get(current);
+        } else {
+            return null;
+        }
     }
 
     private void saveImage(Bitmap finalBitmap, String name) {

@@ -38,6 +38,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.DeviceShareDialog;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -342,8 +343,8 @@ public class MainActivity extends AppCompatActivity
                         .setContentUrl(Uri.parse(model.link))
                         .build();
 
-        DeviceShareDialog dialog = new DeviceShareDialog(this);
-        dialog.show(content);
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
     }
 
     private RssFeedModel getCurrentModel () {

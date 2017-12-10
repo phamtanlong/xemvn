@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/meme_image"
-        android:layout_width="220dp"
+        android:layout_width="200dp"
         android:layout_height="120dp"
         android:adjustViewBounds="true"
         android:background="@android:drawable/editbox_dropdown_light_frame"

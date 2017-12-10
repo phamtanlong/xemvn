@@ -60,9 +60,11 @@ public class EditMemeActivity extends AppCompatActivity {
 
         try {
             ConstraintLayout layout = findViewById(R.id.meme_edit_layout);
-            InputStream input = new java.net.URL(memeItem.link).openStream();
-            layout.setBackground(Drawable.createFromStream(input, "name"));
-        } catch (IOException e) {
+            int resId = getResources().getIdentifier(memeItem.id, "drawable", getPackageName());
+            layout.setBackgroundResource(resId);
+            //InputStream input = new java.net.URL(memeItem.link).openStream();
+            //layout.setBackground(Drawable.createFromStream(input, "name"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -92,9 +94,12 @@ public class EditMemeActivity extends AppCompatActivity {
         EditText editTextBottom = findViewById(R.id.meme_bottom_text);
 
         try {
-            InputStream input = new java.net.URL(memeItem.link).openStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input)
+            int resId = getResources().getIdentifier(memeItem.id, "drawable", getPackageName());
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId)
                     .copy(Bitmap.Config.ARGB_8888, true); //clone to an Mutable bitmap
+
+            //InputStream input = new java.net.URL(memeItem.link).openStream();
+            //Bitmap bitmap = BitmapFactory.decodeStream(input).copy(Bitmap.Config.ARGB_8888, true); //clone to an Mutable bitmap
 
             Paint paint = new Paint();
             paint.setColor(editTextTop.getCurrentTextColor());
@@ -116,7 +121,7 @@ public class EditMemeActivity extends AppCompatActivity {
 
             saveBitmap(resBitmap, getNewImageName());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

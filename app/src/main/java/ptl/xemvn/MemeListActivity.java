@@ -10,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import com.squareup.picasso.Picasso;
@@ -44,18 +47,9 @@ public class MemeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meme_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -64,7 +58,7 @@ public class MemeListActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(recyclerView);
     }
 
     @Override
@@ -115,9 +109,11 @@ public class MemeListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             MemeContent.MemeItem item = mValues.get(position);
 
+            int resId = mParentActivity.getResources().getIdentifier(item.id, "drawable", mParentActivity.getPackageName());
             Picasso.with(mParentActivity.getApplicationContext())
-                    .load(item.link)
-                    //.resize(600, 400)
+                    .load(resId) //.load(item.link)
+                    .fit()
+                    .centerInside()
                     .into(holder.imageView);
 
             holder.itemView.setTag(item);
@@ -135,6 +131,7 @@ public class MemeListActivity extends AppCompatActivity {
             ViewHolder(View view) {
                 super(view);
                 imageView = view.findViewById(R.id.meme_image);
+
             }
         }
     }

@@ -105,13 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         requestPermissions();
 
-        int drawableResourceId = this.getResources().getIdentifier("nameOfDrawable", "drawable", this.getPackageName());
-
-
-        //setup facebook
         setupFacebook();
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
     }
 
     @Override

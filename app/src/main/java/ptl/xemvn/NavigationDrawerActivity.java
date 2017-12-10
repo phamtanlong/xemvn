@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
@@ -18,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -121,11 +123,24 @@ public class NavigationDrawerActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.big_smile)
+                    .setTitle("XemVN")
+                    .setMessage("Bạn có thực sự muốn thoát?")
+                    .setPositiveButton("Thoát", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Không", null)
+                    .show();
         }
     }
 
@@ -210,6 +225,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_comment:
                     Log.i("Fuck", "Nagigate comment");
+                    openCommentWebView();
                     return true;
                 case R.id.navigation_download:
                     Log.i("Fuck", "Nagigate download");
@@ -290,6 +306,18 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else {
             return false;
         }
+    }
+
+    private void openCommentWebView () {
+        RssFeedModel model = getCurrentModel();
+        if (model == null) {
+            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Intent intent = new Intent(getApplicationContext(), WebActivity.class);
+        intent.putExtra("url", model.link);
+        startActivity(intent);
     }
 
     private void downloadCurrentImage () {

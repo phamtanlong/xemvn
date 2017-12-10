@@ -1,8 +1,6 @@
 package ptl.xemvn;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -73,7 +71,7 @@ public class MemeListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            startActivity(new Intent(MemeListActivity.this, NavigationDrawerActivity.class));
+            startActivity(new Intent(MemeListActivity.this, MainActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

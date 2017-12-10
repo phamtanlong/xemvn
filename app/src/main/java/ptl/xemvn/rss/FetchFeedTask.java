@@ -13,8 +13,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-import ptl.xemvn.NavigationDrawerActivity;
-
 /**
  * Created by phamtanlong on 12/3/17.
  */

@@ -1,9 +1,6 @@
 package ptl.xemvn;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,30 +34,22 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.DeviceShareDialog;
 import com.facebook.share.model.ShareLinkContent;
-import com.google.zxing.common.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import ptl.xemvn.rss.FetchFeedTask;
 import ptl.xemvn.rss.RssFeedModel;
 import ptl.xemvn.rss.RssFetchListener;
 
-import static com.facebook.AccessToken.getCurrentAccessToken;
-
-public class NavigationDrawerActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RssFetchListener {
 
     public int currentPage = R.id.nav_new;
@@ -78,7 +67,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation_drawer);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -114,6 +103,9 @@ public class NavigationDrawerActivity extends AppCompatActivity
         ignoreFileUriExposedException();
 
         requestPermissions();
+
+        int drawableResourceId = this.getResources().getIdentifier("nameOfDrawable", "drawable", this.getPackageName());
+
 
         //setup facebook
         setupFacebook();
@@ -311,7 +303,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
     private void openCommentWebView () {
         RssFeedModel model = getCurrentModel();
         if (model == null) {
-            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -323,7 +315,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
     private void downloadCurrentImage () {
         RssFeedModel model = getCurrentModel();
         if (model == null) {
-            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -342,7 +334,7 @@ public class NavigationDrawerActivity extends AppCompatActivity
     private void shareCurrentImage () {
         RssFeedModel model = getCurrentModel();
         if (model == null) {
-            Toast.makeText(NavigationDrawerActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Nothing found", Toast.LENGTH_LONG).show();
             return;
         }
 

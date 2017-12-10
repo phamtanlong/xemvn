@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -48,6 +49,12 @@ public class WebActivity extends Activity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 cleanView();
+
+                if (newProgress < 100) {
+                    if (!pd.isShowing()) {
+                        pd.show();
+                    }
+                }
             }
         });
 
@@ -73,6 +80,23 @@ public class WebActivity extends Activity {
         });
 
         webView.loadUrl(getIntent().getStringExtra("url"));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                    } else {
+                        finish();
+                    }
+                    return true;
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public static void loadJsCode (Context context) {

@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -193,7 +192,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), MemeListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_login) {
-            loginFacebook();
+            if (isLogedIn()) {
+                logoutFacebook();
+            } else {
+                loginFacebook();
+            }
         } else if (id == R.id.nav_setting) {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
@@ -242,6 +245,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setupFacebook () {
         callbackManager = CallbackManager.Factory.create();
 
@@ -250,22 +259,29 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     // App code
-                    Log.i("Facebook", "Login success");
+                    Log.i("Facebook", "Login success----------");
+                    updateFacebookState();
                 }
 
                 @Override
                 public void onCancel() {
                     // App code
-                    Log.i("Facebook", "Login cancel");
+                    Log.i("Facebook", "Login cancel----------");
+                    updateFacebookState();
                 }
 
                 @Override
                 public void onError(FacebookException exception) {
                     // App code
-                    Log.i("Facebook", "Login error");
+                    Log.i("Facebook", "Login error------------");
+                    updateFacebookState();
                 }
             });
 
+        updateFacebookState();
+    }
+
+    private void updateFacebookState () {
         //update logged in status & ui
         if (isLogedIn()) {
             facebookItem.setTitle("Đăng xuất");
@@ -275,22 +291,40 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loginFacebook () {
-
-        if (isLogedIn()) {
-            Log.i("Facebook", "Logout out out...");
-            LoginManager.getInstance().logOut();
-        } else {
+        if (!isLogedIn()) {
             Log.i("Facebook", "Login begin...");
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        }
+    }
+
+    private void logoutFacebook () {
+        if (isLogedIn()) {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.com_facebook_favicon_blue)
+                    .setTitle("XemVN")
+                    .setMessage("Bạn có thực sự muốn thoát Facebook?")
+                    .setPositiveButton("Thoát", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i("Facebook", "Logout out out...");
+                            LoginManager.getInstance().logOut();
+                            updateFacebookState();
+                        }
+                    })
+                    .setNegativeButton("Không", null)
+                    .show();
         }
     }
 
     private boolean isLogedIn () {
         AccessToken token = AccessToken.getCurrentAccessToken();
 
-        if (token != null && !token.isExpired() && !TextUtils.isEmpty(token.getToken())) {
+        if (token != null) { // && !token.isExpired() && !TextUtils.isEmpty(token.getToken())
+            Log.i("Facebook", "Token != null");
             return true;
         } else {
+            Log.i("Facebook", "Token == null");
             return false;
         }
     }

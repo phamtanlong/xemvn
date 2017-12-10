@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,12 +22,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class WebActivity extends Activity {
 
     private WebView webView;
     private ProgressDialog pd;
     private static String jsCode;
+    private static ArrayList<String> ignoreDomains = null;
 
     @SuppressLint("SetJavaScriptEnabled")
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class WebActivity extends Activity {
         setContentView(R.layout.activity_web);
 
         loadJsCode(WebActivity.this);
+        loadIgnoreDomains(WebActivity.this);
 
         pd = new ProgressDialog(WebActivity.this);
         pd.setMessage("Đang tải...");
@@ -44,21 +49,50 @@ public class WebActivity extends Activity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setAllowContentAccess(true);
 
         webView.setWebChromeClient(new WebChromeClient() {
+
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 cleanView();
 
                 if (newProgress < 100) {
-                    if (!pd.isShowing()) {
-                        pd.show();
+                    try {
+                        if (!pd.isShowing()) {
+                            pd.show();
+                        }
+                    } catch (Exception e) {
                     }
                 }
             }
         });
 
         webView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                cleanView();
+                super.onLoadResource(view, url);
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+                String url = request.getUrl().toString();
+                for (String line : ignoreDomains) {
+                    if (url.contains(line)) {
+                        //Log.e("Ignore", url);
+                        return new WebResourceResponse("", "", null);
+                    }
+                }
+
+                Log.i("Load", request.getUrl().toString());
+                return super.shouldInterceptRequest(view, request);
+            }
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url){
                 view.loadUrl(url);
@@ -97,6 +131,27 @@ public class WebActivity extends Activity {
 
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static void loadIgnoreDomains (Context context) {
+        if (ignoreDomains != null)
+            return;
+
+        ignoreDomains = new ArrayList<>();
+        InputStream inputStream = context.getResources().openRawResource(R.raw.ignore_domains);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                ignoreDomains.add(line);
+                Log.i("IgnoreDomains", line);
+                line = reader.readLine();
+            }
+            Log.i("IgnoreDomains", "Ignore Domains load done!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void loadJsCode (Context context) {

@@ -1,0 +1,9 @@
+youtube.com
+adservice.google.com
+google-analytics.com
+googletagservices.com
+doubleclick.net
+google.com
+zalo.me
+googlesyndication.com
+/thumbnail-

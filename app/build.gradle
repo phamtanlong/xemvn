@@ -42,4 +42,7 @@ dependencies {
     //Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:support-annotations:27.0.2'
+
+    //Color picker
+    compile 'com.github.QuadFlask:colorpicker:0.0.13'
 }

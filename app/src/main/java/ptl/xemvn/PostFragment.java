@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ptl.xemvn.R;
-import ptl.xemvn.TabbedActivity;
 import ptl.xemvn.rss.RssFeedModel;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class PostFragment extends Fragment {
 
     public int sectionNumber;
     public RssFeedModel rssFeedModel;
@@ -25,7 +23,7 @@ public class PlaceholderFragment extends Fragment {
     private ImageView imageView;
     private View progressView;
 
-    public PlaceholderFragment() {
+    public PostFragment() {
         super();
     }
 
@@ -33,8 +31,8 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber, RssFeedModel model) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
+    public static PostFragment newInstance(int sectionNumber, RssFeedModel model) {
+        PostFragment fragment = new PostFragment();
         fragment.sectionNumber = sectionNumber;
         fragment.rssFeedModel = model;
         return fragment;

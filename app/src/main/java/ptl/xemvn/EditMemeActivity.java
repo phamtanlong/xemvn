@@ -1,20 +1,14 @@
 package ptl.xemvn;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,18 +16,21 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,12 +40,17 @@ import ptl.xemvn.meme.MemeContent;
 public class EditMemeActivity extends AppCompatActivity {
 
     private MemeContent.MemeItem memeItem;
+    private EditText editTextTop;
+    private EditText editTextBottom;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_meme);
+
+        editTextTop = findViewById(R.id.meme_top_text);
+        editTextBottom = findViewById(R.id.meme_bottom_text);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -59,9 +61,11 @@ public class EditMemeActivity extends AppCompatActivity {
         memeItem = MemeContent.getItem(id);
 
         try {
-            ConstraintLayout layout = findViewById(R.id.meme_edit_layout);
+            //ConstraintLayout layout = findViewById(R.id.meme_edit_layout);
             int resId = getResources().getIdentifier(memeItem.id, "drawable", getPackageName());
-            layout.setBackgroundResource(resId);
+            ImageView imageView = findViewById(R.id.meme_image_edit);
+            imageView.setImageResource(resId);
+            //layout.setBackgroundResource(resId);
             //InputStream input = new java.net.URL(memeItem.link).openStream();
             //layout.setBackground(Drawable.createFromStream(input, "name"));
         } catch (Exception e) {
@@ -73,12 +77,18 @@ public class EditMemeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         if (id == android.R.id.home) {
             finish();
             return true;
         } else if (id == R.id.action_meme_done) {
             onDone();
+        }  else if (id == R.id.action_meme_textcolor) {
+            onChooseTextColor(EditMemeActivity.this);
+        }  else if (id == R.id.action_meme_bgcolor) {
+            onChooseTextBackgroundColor(EditMemeActivity.this);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -89,41 +99,89 @@ public class EditMemeActivity extends AppCompatActivity {
         return true;
     }
 
+    private void onChooseTextBackgroundColor(Context context) {
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle("Màu nền")
+                .initialColor(Color.TRANSPARENT)
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        editTextTop.setBackgroundColor(selectedColor);
+                        editTextBottom.setBackgroundColor(selectedColor);
+                    }
+                })
+                .setPositiveButton("Ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        editTextTop.setBackgroundColor(selectedColor);
+                        editTextBottom.setBackgroundColor(selectedColor);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+    }
+
+    private void onChooseTextColor(Context context) {
+
+        int currentBackgroundColor = editTextTop.getCurrentTextColor();
+
+        ColorPickerDialogBuilder
+                .with(context)
+                .setTitle("Màu chữ")
+                .initialColor(currentBackgroundColor)
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        editTextTop.setTextColor(selectedColor);
+                        editTextBottom.setTextColor(selectedColor);
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        editTextTop.setTextColor(selectedColor);
+                        editTextBottom.setTextColor(selectedColor);
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .build()
+                .show();
+    }
+
     private void onDone () {
-        EditText editTextTop = findViewById(R.id.meme_top_text);
-        EditText editTextBottom = findViewById(R.id.meme_bottom_text);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editTextTop.getWindowToken(), 0);
 
-        try {
-            int resId = getResources().getIdentifier(memeItem.id, "drawable", getPackageName());
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resId)
-                    .copy(Bitmap.Config.ARGB_8888, true); //clone to an Mutable bitmap
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-            //InputStream input = new java.net.URL(memeItem.link).openStream();
-            //Bitmap bitmap = BitmapFactory.decodeStream(input).copy(Bitmap.Config.ARGB_8888, true); //clone to an Mutable bitmap
+        RelativeLayout layout = findViewById(R.id.meme_edit_layout);
 
-            Paint paint = new Paint();
-            paint.setColor(editTextTop.getCurrentTextColor());
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        editTextTop.setFocusableInTouchMode(false);
+        editTextTop.setFocusable(false);
+        editTextTop.clearFocus();
 
-            float spTextSize = editTextTop.getTextSize();
-            float pxTextSize = convertSpToPixels(spTextSize, EditMemeActivity.this);
-            paint.setTextSize(pxTextSize);
-            paint.setTextAlign(Paint.Align.CENTER);
+        editTextBottom.setFocusableInTouchMode(false);
+        editTextBottom.setFocusable(false);
+        editTextBottom.clearFocus();
 
-            Canvas canvas = new Canvas(bitmap);
+        layout.setDrawingCacheEnabled(true);
+        Bitmap bmScreen = layout.getDrawingCache();
 
-            canvas.drawText(editTextTop.getText().toString(), 0.5f * bitmap.getWidth(), 0.3f * bitmap.getHeight(), paint);
-
-            canvas.drawText(editTextBottom.getText().toString(), 0.5f * bitmap.getWidth(), 0.8f * bitmap.getHeight(), paint);
-
-            BitmapDrawable res = new BitmapDrawable(bitmap);
-            Bitmap resBitmap = res.getBitmap();
-
-            saveBitmap(resBitmap, getNewImageName());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        saveBitmap(bmScreen, getNewImageName());
 
     }
 

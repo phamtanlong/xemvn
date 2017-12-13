@@ -6,4 +6,18 @@
         android:orderInCategory="100"
         android:title="@string/done"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_meme_textcolor"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:iconTint="@android:color/white"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_meme_bgcolor"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:iconTint="@android:color/white"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="always" />
 </menu>

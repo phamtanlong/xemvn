@@ -8,7 +8,6 @@ package ptl.xemvn;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ import ptl.xemvn.rss.RssFeedModel;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public ArrayList<RssFeedModel> listData = new ArrayList<>();
-    public HashMap<Integer, PlaceholderFragment> listFragment = new HashMap<>();
+    public HashMap<Integer, PostFragment> listFragment = new HashMap<>();
 
     public SectionsPagerAdapter(FragmentManager fm, ArrayList<RssFeedModel> list) {
         super(fm);
@@ -34,9 +33,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public void updateData (ArrayList<RssFeedModel> list) {
         listData = list;
 
-        for(Map.Entry<Integer, PlaceholderFragment> entry : listFragment.entrySet()) {
+        for(Map.Entry<Integer, PostFragment> entry : listFragment.entrySet()) {
             Integer number = entry.getKey();
-            PlaceholderFragment fragment = entry.getValue();
+            PostFragment fragment = entry.getValue();
             if (fragment != null) {
                 fragment.updateView(number, listData.get(number));
             }
@@ -46,9 +45,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
+        // Return a PostFragment (defined as a static inner class below).
 
-        PlaceholderFragment f = PlaceholderFragment.newInstance(position + 1, listData.get(position));
+        PostFragment f = PostFragment.newInstance(position + 1, listData.get(position));
         listFragment.put(position, f);
         return f;
     }
